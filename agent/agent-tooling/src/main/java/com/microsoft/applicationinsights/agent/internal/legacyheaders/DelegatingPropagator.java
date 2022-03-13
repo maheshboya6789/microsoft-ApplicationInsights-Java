@@ -58,6 +58,9 @@ public class DelegatingPropagator implements TextMapPropagator {
         case "b3multi":
           propagators.add(B3Propagator.injectingMultiHeaders());
           break;
+        case "b3single":
+          propagators.add(B3Propagator.injectingSingleHeaders());
+          break;
         default:
           throw new IllegalStateException(
               "Unexpected additional propagator: " + additionalPropagator);
