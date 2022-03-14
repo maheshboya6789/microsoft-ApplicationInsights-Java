@@ -74,7 +74,8 @@ public class TelemetryClientInitializer {
     loadCustomJmxPerfCounters(configuration.jmxMetrics);
 
     PerformanceCounterContainer.INSTANCE.register(
-        new ProcessCpuPerformanceCounter(configuration.preview.reportNonNormalizedProcessorTime));
+        new ProcessCpuPerformanceCounter(
+            configuration.preview.backCompatNonNormalizedCpuPercentage));
     PerformanceCounterContainer.INSTANCE.register(new ProcessMemoryPerformanceCounter());
     PerformanceCounterContainer.INSTANCE.register(new FreeMemoryPerformanceCounter());
 
@@ -91,9 +92,9 @@ public class TelemetryClientInitializer {
     PerformanceCounterContainer.INSTANCE.register(new GcPerformanceCounter());
 
     telemetryClient.addNonFilterableMetricNames(
-        MetricNames.TOTAL_CPU,
-        MetricNames.PROCESS_CPU,
-        MetricNames.PROCESS_CPU_NORMALIZED,
+        MetricNames.TOTAL_CPU_PERCENTAGE,
+        MetricNames.PROCESS_CPU_PERCENTAGE,
+        MetricNames.PROCESS_CPU_PERCENTAGE_NORMALIZED,
         MetricNames.PROCESS_MEMORY,
         MetricNames.TOTAL_MEMORY,
         MetricNames.PROCESS_IO);

@@ -424,7 +424,7 @@ public class TelemetryClient {
               telemetryClient::getInstrumentationKey,
               telemetryClient.getRoleName(),
               telemetryClient.getRoleInstance(),
-              configuration.preview.reportNonNormalizedProcessorTime);
+              configuration.preview.backCompatNonNormalizedCpuPercentage);
     }
   }
 

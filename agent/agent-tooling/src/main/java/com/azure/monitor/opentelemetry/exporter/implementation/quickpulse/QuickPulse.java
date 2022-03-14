@@ -48,7 +48,7 @@ public class QuickPulse {
       Supplier<String> instrumentationKey,
       @Nullable String roleName,
       @Nullable String roleInstance,
-      boolean reportNonNormalizedProcessorTime) {
+      boolean backCompatNonNormalizedCpuPercentage) {
     QuickPulse quickPulse = new QuickPulse();
     quickPulse.initialize(
         httpPipeline,
@@ -56,7 +56,7 @@ public class QuickPulse {
         instrumentationKey,
         roleName,
         roleInstance,
-        reportNonNormalizedProcessorTime);
+        backCompatNonNormalizedCpuPercentage);
     return quickPulse;
   }
 
@@ -70,7 +70,7 @@ public class QuickPulse {
       Supplier<String> instrumentationKey,
       @Nullable String roleName,
       @Nullable String roleInstance,
-      boolean reportNonNormalizedProcessorTime) {
+      boolean backCompatNonNormalizedCpuPercentage) {
     CountDownLatch latch = new CountDownLatch(1);
     Executors.newSingleThreadExecutor(ThreadPoolUtils.createDaemonThreadFactory(QuickPulse.class))
         .execute(
@@ -82,7 +82,7 @@ public class QuickPulse {
                     instrumentationKey,
                     roleName,
                     roleInstance,
-                    reportNonNormalizedProcessorTime));
+                    backCompatNonNormalizedCpuPercentage));
     // don't return until initialization thread has lock
     try {
       latch.await();
@@ -104,7 +104,7 @@ public class QuickPulse {
       Supplier<String> instrumentationKey,
       @Nullable String roleName,
       @Nullable String roleInstance,
-      boolean reportNonNormalizedProcessorTime) {
+      boolean backCompatNonNormalizedCpuPercentage) {
     if (initialized) {
       latch.countDown();
     } else {
@@ -129,7 +129,7 @@ public class QuickPulse {
           }
 
           QuickPulseDataCollector collector =
-              new QuickPulseDataCollector(reportNonNormalizedProcessorTime);
+              new QuickPulseDataCollector(backCompatNonNormalizedCpuPercentage);
 
           QuickPulsePingSender quickPulsePingSender =
               new QuickPulsePingSender(
