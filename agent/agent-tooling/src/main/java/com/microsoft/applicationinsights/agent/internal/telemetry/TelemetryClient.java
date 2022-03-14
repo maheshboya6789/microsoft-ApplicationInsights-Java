@@ -423,7 +423,8 @@ public class TelemetryClient {
               },
               telemetryClient::getInstrumentationKey,
               telemetryClient.getRoleName(),
-              telemetryClient.getRoleInstance());
+              telemetryClient.getRoleInstance(),
+              configuration.preview.reportNonNormalizedProcessorTime);
     }
   }
 

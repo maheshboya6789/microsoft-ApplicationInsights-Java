@@ -47,9 +47,16 @@ public class QuickPulse {
       Supplier<URL> endpointUrl,
       Supplier<String> instrumentationKey,
       @Nullable String roleName,
-      @Nullable String roleInstance) {
+      @Nullable String roleInstance,
+      boolean reportNonNormalizedProcessorTime) {
     QuickPulse quickPulse = new QuickPulse();
-    quickPulse.initialize(httpPipeline, endpointUrl, instrumentationKey, roleName, roleInstance);
+    quickPulse.initialize(
+        httpPipeline,
+        endpointUrl,
+        instrumentationKey,
+        roleName,
+        roleInstance,
+        reportNonNormalizedProcessorTime);
     return quickPulse;
   }
 
@@ -62,13 +69,20 @@ public class QuickPulse {
       Supplier<URL> endpointUrl,
       Supplier<String> instrumentationKey,
       @Nullable String roleName,
-      @Nullable String roleInstance) {
+      @Nullable String roleInstance,
+      boolean reportNonNormalizedProcessorTime) {
     CountDownLatch latch = new CountDownLatch(1);
     Executors.newSingleThreadExecutor(ThreadPoolUtils.createDaemonThreadFactory(QuickPulse.class))
         .execute(
             () ->
                 initializeSync(
-                    latch, httpPipeline, endpointUrl, instrumentationKey, roleName, roleInstance));
+                    latch,
+                    httpPipeline,
+                    endpointUrl,
+                    instrumentationKey,
+                    roleName,
+                    roleInstance,
+                    reportNonNormalizedProcessorTime));
     // don't return until initialization thread has lock
     try {
       latch.await();
@@ -89,7 +103,8 @@ public class QuickPulse {
       Supplier<URL> endpointUrl,
       Supplier<String> instrumentationKey,
       @Nullable String roleName,
-      @Nullable String roleInstance) {
+      @Nullable String roleInstance,
+      boolean reportNonNormalizedProcessorTime) {
     if (initialized) {
       latch.countDown();
     } else {
@@ -113,7 +128,8 @@ public class QuickPulse {
             instanceName = "Unknown host";
           }
 
-          QuickPulseDataCollector collector = new QuickPulseDataCollector();
+          QuickPulseDataCollector collector =
+              new QuickPulseDataCollector(reportNonNormalizedProcessorTime);
 
           QuickPulsePingSender quickPulsePingSender =
               new QuickPulsePingSender(
